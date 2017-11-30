@@ -1,0 +1,24 @@
+---
+- name: wrapper playbook for testing
+  hosts: all
+
+  pre_tasks:
+    - name: create testuser group
+      group:
+        name: testuser
+        state: present
+    - name: Create Test User
+      user:
+        name: testuser
+        group: testuser
+        append: yes
+        state: present
+        shell: /bin/bash
+  
+  tasks:
+    - include_role:
+        name: role_under_test
+
+  vars:
+    docker_users:
+      - testuser
