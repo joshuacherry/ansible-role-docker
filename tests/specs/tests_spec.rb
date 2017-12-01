@@ -14,8 +14,8 @@ control '01' do
     it { should be_enabled }
   end
 
-  describe file('/usr/local/bin/docker-compose') do
-    it { should exist }
+  describe pip('docker-compose') do
+    it { should be_installed }
   end
 
   describe user('testuser') do

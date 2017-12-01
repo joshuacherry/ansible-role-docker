@@ -38,3 +38,8 @@
     repo: "{{ docker_apt_repository }}"
     state: present
     update_cache: yes
+
+- name: Ensure Pip is installed. (APT)
+  apt:
+    name: python-pip
+    update_cache: yes
