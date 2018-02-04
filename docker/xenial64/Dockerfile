@@ -18,7 +18,7 @@ RUN apt-key add /tmp/chef.asc \
     && apt-add-repository ppa:ansible/ansible \
     && apt-get update -y \
     && apt-get --no-install-recommends install -y \
-        ansible=2.4.2.0-1* \
+        ansible \
         git \
         sudo \
         inspec=1.43.5-1 \
