@@ -5,29 +5,36 @@
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
+ROOT_FOLDER = File.basename(__dir__)
 
 $setupScript = <<SCRIPT
-echo provisioning ansible and docker...
-
-apt-add-repository -y ppa:ansible/ansible
+echo provisioning docker...
 sudo apt-get update
-apt-get -y -o Dpkg::Options::="--force-confold" install ansible
 sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common bash-completion
-
-sudo mkdir -p /tmp/tests-workspace
-sudo cp -R /vagrant/* /tmp/tests-workspace/
-sudo mkdir -p /tmp/tests-workspace/tests/roles
-sudo ln -sf /tmp/tests-workspace/ /tmp/tests-workspace/tests/roles/role_under_test
-if [ -f "/tmp/tests-workspace/tests/requirements.yml" ]; then 
-  sudo ansible-galaxy install --roles-path "/tmp/tests-workspace/tests/roles/" -r "/tmp/tests-workspace/tests/requirements.yml"
-fi
-sudo env ANSIBLE_FORCE_COLOR=1 ansible-playbook -i "/tmp/tests-workspace/tests/inventory" -c local -v "/tmp/tests-workspace/tests/tests.yml"
-
+sudo apt-get install python3-pip -y && sudo pip3 install --upgrade pip && sudo pip install pyyaml
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+#####apt-add-repository -y ppa:ansible/ansible
+sudo apt-get update
+#####apt-get -y -o Dpkg::Options::="--force-confold" install ansible
+# Show available version apt-cache madison docker-ce
+sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-ce="18.03.0~ce-0~ubuntu" python-dev
 sudo usermod -a -G docker vagrant
+sudo pip install testinfra
+sudo pip install 'ansible==2.5.0'
+# Limit docker version <3.0 as workaround for: https://github.com/ansible/ansible/issues/35612
+sudo pip install 'docker-compose<1.19'
+sudo pip install molecule
+sudo pip install tox
 
 docker version
 
 docker-compose version
+
+molecule --version
 echo "###########################################"
 echo "#                IP ADDRESS               #"
 echo "#                                         #"
@@ -37,9 +44,9 @@ SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "bento/ubuntu-16.04"
-  config.vm.synced_folder ".", "/vagrant",
-    owner: "vagrant", group: "vagrant",
-    mount_options: ["dmode=777,fmode=777"]
+  config.vm.synced_folder ".", "/"+ROOT_FOLDER,
+  owner: "vagrant", group: "vagrant",
+  mount_options: ["dmode=777,fmode=777"]
   config.vm.define "server" do |host|
     host.vm.hostname = "server"
     config.vm.network "private_network", type: "dhcp"

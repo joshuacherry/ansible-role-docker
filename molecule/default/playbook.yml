@@ -1,7 +1,8 @@
 ---
-- name: wrapper playbook for testing
+- name: Converge
   hosts: all
-
+  roles:
+    - role: ansible-role-docker
   pre_tasks:
     - name: create testuser group
       group:
@@ -11,14 +12,9 @@
       user:
         name: testuser
         group: testuser
-        append: yes
+        append: 'yes'
         state: present
         shell: /bin/bash
-  
-  tasks:
-    - include_role:
-        name: role_under_test
-
   vars:
     docker_users:
       - testuser

@@ -16,11 +16,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2018-04-20
+
+### Changed
+
+- Changed test suite to molecule
+
 ## [0.2.0] - 2017-12-01
 
 ### Changed
 
 - Using pip for docker-compose instead of github repo
 
-[Unreleased]: https://github.com/joshuacherry/ansible-role-grafana/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/joshuacherry/ansible-role-grafana/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/joshuacherry/ansible-role-grafana/compare/0.2.0...1.0.0
 [0.2.0]: https://github.com/joshuacherry/ansible-role-grafana/compare/0.1.0...0.2.0

@@ -12,7 +12,7 @@
   service:
     name: docker
     state: started
-    enabled: yes
+    enabled: 'yes'
 
 - include_tasks: docker-compose.yml
   when: docker_install_compose
